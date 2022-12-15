@@ -1,5 +1,5 @@
 //jshint esversion:6
-
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -7,7 +7,7 @@ const _ = require("lodash");
 
 const app = express();
 
-// let items = ["Buy car", "Drive car", "Eat Food"];
+
 var workItems = [];
 
 app.use(bodyParser.urlencoded({
@@ -17,7 +17,7 @@ app.use(express.static("public"));
 
 app.set('view engine', 'ejs');
 
-mongoose.connect("mongodb+srv://admin-jorden:test123@cluster0.wmdxiu3.mongodb.net/todolistDB", {
+mongoose.connect(process.env.URL, {
   useNewUrlParser: true
 });
 
@@ -68,26 +68,6 @@ app.get("/", function(req, res) {
 
 });
 
-// app.get("/", function(req, res) {
-//   var today = new Date();
-//   var currentDay = today.getDay();
-//   var day = "";
-//   if (today.getDay() === 6 || currentDay === 0) {
-//     day = new Intl.DateTimeFormat('en-US', {
-//       weekday: 'long'
-//     }).format(today);
-//   } else {
-//     day = new Intl.DateTimeFormat('en-US', {
-//       weekday: 'long'
-//     }).format(today);
-//   }
-
-//   res.render("list", {
-//     listTitle: day,
-//     newListItems: items
-//   });
-//
-// });
 
 app.post("/", function(req, res) {
 
