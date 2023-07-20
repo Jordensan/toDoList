@@ -27,13 +27,13 @@ const itemSchema = {
 const Item = mongoose.model("Item", itemSchema);
 
 const item1 = new Item({
-  name: "buy"
+  name: "I am sku"
 });
 const item2 = new Item({
-  name: "eat"
+  name: "sku"
 });
 const item3 = new Item({
-  name: "lift"
+  name: "sku"
 });
 
 const defaultItems = [item1, item2, item3];
