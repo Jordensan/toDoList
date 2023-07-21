@@ -1,28 +1,72 @@
 <%- include("header") -%>
 
 <div class="box" id="heading">
-  <h1> <%= listTitle %> </h1>
-
+  <form id="titleForm" method="post">
+    <h1 id="listTitle" contenteditable><%= listTitle %></h1>
+  </form>
 </div>
 <div class="box">
-
-  <%   newListItems.forEach(function(item){ %>
+  <% newListItems.forEach(function(item){ %>
   <form action="/delete" method="post">
-
-
     <div class="item">
       <input name="checkbox" value="<%=item._id%>" type="checkbox" onChange="this.form.submit()">
       <p><%= item.name %></p>
-
     </div>
-    <input type="hidden" name="listName" value="<%= listTitle %>"> 
+    <input type="hidden" name="listName" value="<%= listTitle %>">
   </form>
-  <%  }); %>
+  <% }); %>
 
-  <form class="item" action="/" method="post">
-    <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+  <form class="item" id="newItemForm" action="/" method="post">
+    <input type="text" id="newItem" name="newItem" placeholder="New Item" autocomplete="off">
     <button type="submit" name="list" value=<%= listTitle %>>+</button>
-
   </form>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const titleForm = document.getElementById('titleForm');
+    const listTitleElement = document.getElementById('listTitle');
+    const newItemInput = document.getElementById('newItem');
+
+    // Save the initial title on focus
+    let initialTitle;
+    listTitleElement.addEventListener('focus', function() {
+      initialTitle = listTitleElement.textContent.trim();
+    });
+
+    // Handle the Enter key press to save the title and move focus out of the text box
+    listTitleElement.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission
+        listTitleElement.blur(); // Move focus out of the text box
+        saveTitle(); // Save the title and update the URL
+      }
+    });
+
+    // Function to save the title
+    function saveTitle() {
+      const newTitle = listTitleElement.textContent.trim();
+
+      // Check if the title has changed
+      if (newTitle !== initialTitle) {
+        // Set the form action to the new URL with the updated title
+        titleForm.action = `/${encodeURIComponent(newTitle)}`;
+        // Submit the form to update the URL
+        titleForm.submit();
+      }
+    }
+
+    // Get the listTitle parameter from the URL and set it as the initial title
+    const urlParams = new URLSearchParams(window.location.search);
+    const listTitleParam = urlParams.get('listTitle');
+    if (listTitleParam) {
+      listTitleElement.textContent = listTitleParam;
+    }
+
+    // Handle the blur event on the titleForm to save the title when clicking out of the box
+    titleForm.addEventListener('blur', function() {
+      saveTitle();
+    });
+  });
+</script>
 <%- include("footer") -%>
